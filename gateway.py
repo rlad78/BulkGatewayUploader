@@ -28,10 +28,6 @@ class Gateway:
     # returns false if gway is full
     def add_line(self, line: dict) -> bool:
         if line and self.count() < self.__max_ports:
-            # entry = line.copy()
-            # line_name = standarize_name(line["NAME"])
-            # match: re.Match = re.search(r'name', " ".join(line.keys()))
-
             for key in line.keys():
                 if re.search(r'name', key, re.IGNORECASE):
                     match = str(key)
@@ -52,7 +48,6 @@ class Gateway:
                 except KeyError:
                     raise Exception("DN or Phone Number not found in line")
             entry.update({"DISPLAY": line_name, "LINE DESCRIPTION": line_name})
-                          #"ASCII ALERTING NAME": line_name[:24] + " - " + entry["PORT DIRECTORY NUMBER"][-4:]})
             self.lines.append(entry)
             return True
 

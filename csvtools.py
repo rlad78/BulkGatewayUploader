@@ -1,6 +1,7 @@
 import csv
 import re
 
+
 def csv_as_list(file_name: str) -> list[list[str]]:
     with open(file_name, encoding="utf-8-sig") as csv_file:
         return list(csv.reader(csv_file, delimiter=","))
@@ -65,6 +66,7 @@ def get_dict_entries(d: list[dict], match_this: str, match_category: str) -> lis
         if item.get(match_category, "!") == match_this:
             my_dict.append(item)
     return my_dict
+
 
 def get_valid_filename(s: str) -> str:
     s = str(s).strip().replace(' ', '_')

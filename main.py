@@ -54,8 +54,6 @@ gateways: list = []
 for n in range(gateway_count):
     gateway_mac: str = ""
     gateway_hostname = ""
-    # gateway_mac: str = "00000000DD0" + str(n+1)
-    # gateway_hostname: str = "test-" + str(n+1)
     while len(gateway_mac) != 12:
         gateway_mac = shape_mac(input(f"[Gateway {n + 1}]: Enter the full 12-digit MAC address: "))
         if gateway_mac.isnumeric() and len(gateway_mac) != 12:
@@ -89,4 +87,3 @@ for line in data:
 finished_gateways.append(current_gateway)
 for gateway in finished_gateways:
     gateway.export_to_csv()
-    # gateway.debug_print()
