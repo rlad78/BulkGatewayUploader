@@ -1,9 +1,10 @@
-from tkinter import Tk
-from tkinter.filedialog import askopenfilename
-from data import Data
-from gateway import Gateway
 import re
 import time
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+
+from data import Data
+from gateway import Gateway
 
 
 def shape_mac(address: str) -> str:
@@ -22,6 +23,46 @@ def shape_mac(address: str) -> str:
 def get_filename() -> str:
     Tk().withdraw()
     return askopenfilename()
+
+
+def example_csv_format():
+    def center(s, width):
+        adjusted = s
+        for i in range(width - len(s)):
+            if i % 2 == 0:
+                adjusted = adjusted + ' '
+            else:
+                adjusted = ' ' + adjusted
+        return ' ' + adjusted + ' '
+
+    def left(s, width):
+        return ' ' + s + (' ' * (width - len(s))) + ' '
+
+
+    example: dict = {
+        "Name": "Richard Carter",
+        "Phone Number": "8646569969",
+        "...   ": "...   "
+    }
+    # |========================================|
+    # |      Name      | Phone Number | ...    |
+    # |----------------------------------------|
+    # | Richard Carter | 8646569969   | ...    |
+    # | ...            | ...          | ...    |
+    # |========================================|
+    column_widths: dict = {}
+    for k, v in example.items():
+        column_widths[k] = len(k) if len(k) > len(v) else len(v)
+    border: str = ('|' +
+                   '=' * sum(column_widths) +
+                   '=' * (len(dict) * 2) +
+                   '=' * (len(dict) - 1))
+
+    print("This program uses a .csv file that has the following format:\n\n")
+    print(border)
+    print('|'.join([center(x, column_widths[x]) for x in example.keys()]))
+    print(border.replace('=', '-'))
+    # TODO: print the rest please
 
 
 # get data file location
