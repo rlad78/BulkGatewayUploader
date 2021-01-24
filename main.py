@@ -1,11 +1,13 @@
 import re
 import sys
 import time
+from pathlib import Path
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 
 from data import Data
 from gateway import Gateway
+from csvtools import csv_dict_write
 
 
 def shape_mac(address: str) -> str:
@@ -26,7 +28,7 @@ def get_filename() -> str:
     return askopenfilename()
 
 
-def example_csv_format():
+def example_csv_format() -> None:
     def center(s, width):
         adjusted = s
         for i in range(width - len(s)):
@@ -38,7 +40,6 @@ def example_csv_format():
 
     def left(s, width):
         return ' ' + s + (' ' * (width - len(s))) + ' '
-
 
     example: dict = {
         "Name": "Richard Carter",
@@ -67,11 +68,35 @@ def example_csv_format():
     print('|' + '|'.join([left(y, column_widths[x]) for x, y in example.items()]) + '|')
     print('|' + '|'.join([left('...', column_widths[x]) for x in example.keys()]) + '|')
     print(border)
-    input('\nIf you have this file ready, please press [enter]')
+    print('\nIf you would like a .csv file of this template, type "D" and press [enter]')
+    user_in: str = input('Otherwise, simply press [enter] to continue: ')
+
+    if user_in == 'D' or user_in == 'd':
+        generate_csv_template()
+        return None
+    else:
+        return None
+
+
+def generate_csv_template() -> None:
+    template_data: list[dict] = [
+        {
+            "Phone Number": "8646569969",
+            "Name": "Richard Carter"
+        },
+        {
+            "Phone Number": "8646568029",
+            "Name": "Jonathan Learned"
+        }
+    ]
+    file_path = Path.cwd() / "template_gateway.csv"
+    print(f'Saving template .csv as "{file_path}"')
+    csv_dict_write(str(file_path), template_data)
 
 
 # display example csv format
 example_csv_format()
+debug = input('[holding...]')
 
 # get data file location
 print("Opening file picker for .csv...")
