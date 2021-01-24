@@ -1,9 +1,13 @@
+import re
+import sys
+import time
+from pathlib import Path
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+
 from data import Data
 from gateway import Gateway
-import re
-import time
+from csvtools import csv_dict_write
 
 
 def shape_mac(address: str) -> str:
@@ -24,11 +28,82 @@ def get_filename() -> str:
     return askopenfilename()
 
 
+def example_csv_format() -> None:
+    def center(s, width):
+        adjusted = s
+        for i in range(width - len(s)):
+            if i % 2 == 0:
+                adjusted = adjusted + ' '
+            else:
+                adjusted = ' ' + adjusted
+        return ' ' + adjusted + ' '
+
+    def left(s, width):
+        return ' ' + s + (' ' * (width - len(s))) + ' '
+
+    example: dict = {
+        "Name": "Richard Carter",
+        "Phone Number": "8646569969",
+        "...   ": "...   "
+    }
+    # |========================================|
+    # |      Name      | Phone Number | ...    |
+    # |----------------------------------------|
+    # | Richard Carter | 8646569969   | ...    |
+    # | ...            | ...          | ...    |
+    # |========================================|
+    column_widths: dict = {}
+    for k, v in example.items():
+        column_widths[k] = len(k) if len(k) > len(v) else len(v)
+    border: str = ('|' +
+                   ('=' * sum(column_widths.values())) +
+                   ('=' * (len(example) * 2)) +
+                   ('=' * (len(example) - 1)) +
+                   '|')
+
+    print("This program uses a .csv file that has the following format:\n")
+    print(border)
+    print('|' + '|'.join([center(x, column_widths[x]) for x in example.keys()]) + '|')
+    print(border.replace('=', '-'))
+    print('|' + '|'.join([left(y, column_widths[x]) for x, y in example.items()]) + '|')
+    print('|' + '|'.join([left('...', column_widths[x]) for x in example.keys()]) + '|')
+    print(border)
+    print('\nIf you would like a .csv file of this template, type "D" and press [enter]')
+    user_in: str = input('Otherwise, simply press [enter] to continue: ')
+
+    if user_in == 'D' or user_in == 'd':
+        generate_csv_template()
+        return None
+    else:
+        return None
+
+
+def generate_csv_template() -> None:
+    template_data: list[dict] = [
+        {
+            "Phone Number": "8646569969",
+            "Name": "Richard Carter"
+        },
+        {
+            "Phone Number": "8646568029",
+            "Name": "Jonathan Learned"
+        }
+    ]
+    file_path = Path.cwd() / "template_gateway.csv"
+    print(f'Saving template .csv as "{file_path}"')
+    csv_dict_write(str(file_path), template_data)
+    sys.exit()
+
+
+# display example csv format
+example_csv_format()
+
 # get data file location
 print("Opening file picker for .csv...")
 csv_file: str = get_filename()
 if not csv_file:
     print("No file chosen. Exiting...")
+    sys.exit()
 data = Data(csv_file)
 
 # get gateway type
