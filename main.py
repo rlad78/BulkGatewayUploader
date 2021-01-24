@@ -92,11 +92,11 @@ def generate_csv_template() -> None:
     file_path = Path.cwd() / "template_gateway.csv"
     print(f'Saving template .csv as "{file_path}"')
     csv_dict_write(str(file_path), template_data)
+    sys.exit()
 
 
 # display example csv format
 example_csv_format()
-debug = input('[holding...]')
 
 # get data file location
 print("Opening file picker for .csv...")
