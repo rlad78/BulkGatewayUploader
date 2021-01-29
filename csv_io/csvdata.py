@@ -55,6 +55,9 @@ class MakeCSV:
         self.data: list[dict] = []
         self.categories: list[str] = []
 
+    def __add__(self, other):
+        self.add(other)
+
     def __add_categories(self, data: dict) -> None:
         if not self.categories:  # if empty, just put in all of data's categories
             self.categories = list(data.keys()).copy()
