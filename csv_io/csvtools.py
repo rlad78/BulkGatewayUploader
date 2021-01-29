@@ -71,3 +71,5 @@ def csv_hash_write(file_name: str, hash_table: dict[dict]):
 def get_valid_filename(s: str) -> str:
     s = str(s).strip().replace(' ', '_')
     return re.sub(r'(?u)[^-\w.]', '', s)
+
+# TODO: get the parallel IO reader from the VBAReplacer project
