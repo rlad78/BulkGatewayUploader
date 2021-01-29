@@ -1,6 +1,6 @@
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-from csvdata import CSVData
+from csv_io import CSVData
 from gateway import Gateway
 import re
 import time
