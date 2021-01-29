@@ -1,6 +1,6 @@
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-from data import Data
+from csvdata import CSVData
 from gateway import Gateway
 import re
 import time
@@ -29,7 +29,7 @@ print("Opening file picker for .csv...")
 csv_file: str = get_filename()
 if not csv_file:
     print("No file chosen. Exiting...")
-data = Data(csv_file)
+data = CSVData(csv_file)
 
 # get gateway type
 gateway_types: dict = {
