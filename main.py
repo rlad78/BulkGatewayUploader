@@ -4,6 +4,7 @@ from csv_io import CSVData
 from gateway import Gateway
 import re
 import time
+import sys
 
 
 def shape_mac(address: str) -> str:
@@ -29,6 +30,7 @@ print("Opening file picker for .csv...")
 csv_file: str = get_filename()
 if not csv_file:
     print("No file chosen. Exiting...")
+    sys.exit()
 data = CSVData(csv_file)
 
 # get gateway type
