@@ -1,5 +1,6 @@
 import csv
 import re
+import concurrent.futures
 
 
 def csv_as_list(file_name: str) -> list[list[str]]:
@@ -49,27 +50,17 @@ def csv_hash_write(file_name: str, hash_table: dict[dict]):
     csv_dict_write(file_name, dict_list)
 
 
-# def get_dict_values(d: list[dict], category: str, match_this: str = '', match_category: str = '') -> list[str]:
-#     out_list = []
-#     for item in d:
-#         if len(match_category) > 0:
-#             if item.get(match_category) == match_this:
-#                 out_list.append(item.get(category, "!OUT_LIST"))
-#         else:
-#             out_list.append(item.get(category, "!OUT_LIST"))
-#     return out_list
-#
-#
-# def get_dict_entries(d: list[dict], match_this: str, match_category: str) -> list[dict]:
-#     my_dict: list[dict] = []
-#     for item in d:
-#         if item.get(match_category, "!") == match_this:
-#             my_dict.append(item)
-#     return my_dict
-
-
 def get_valid_filename(s: str) -> str:
     s = str(s).strip().replace(' ', '_')
     return re.sub(r'(?u)[^-\w.]', '', s)
 
-# TODO: get the parallel IO reader from the VBAReplacer project
+
+def get_file_stack(files: list[tuple[str, str]]) -> dict:
+    futures = {}
+    return_dicts = {}
+    getter = concurrent.futures.ThreadPoolExecutor()
+    for label, file in files:
+        futures[label] = getter.submit(csv_as_dict_list, file)
+    for key, contents in futures.items():
+        return_dicts[key] = contents.result()
+    return return_dicts
