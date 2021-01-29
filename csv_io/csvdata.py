@@ -1,10 +1,10 @@
-from csv_io import *
+from .csvtools import *
 from pathlib import Path
 
 
 class CSVData:
     def __init__(self, file_name: str):
-        self.path = Path(file_name)
+        self.path = Path(file_name).resolve()
         if not self.path.is_file():
             raise Exception(f'"{self.path.resolve()}" does not exist')
         self.filename = file_name
@@ -48,3 +48,38 @@ class CSVData:
             return []
         else:
             return [x[category] for x in found]
+
+
+class MakeCSV:
+    def __init__(self):
+        self.data: list[dict] = []
+        self.categories: list[str] = []
+
+    def __add_categories(self, data: dict) -> None:
+        if not self.categories:  # if empty, just put in all of data's categories
+            self.categories = list(data.keys()).copy()
+        else:  # check for missing categories, and append any missing to all data (to retain sameness for write)
+            for k in data.keys():
+                if k not in self.categories:
+                    self.categories.append(k)
+                    for entry in self.data:
+                        if k not in entry.keys():
+                            entry[k] = ''
+
+    def add(self, data: dict) -> None:
+        if type(data) != dict:
+            print(f"[MakeCSV | ERROR]: Tried to insert {type(data)} when {type({})} is required")
+            return None
+        self.__add_categories(data)
+
+        # make sure incoming data has all categories
+        for cat in self.categories:
+            if cat not in data.keys():
+                data[cat] = ''
+        self.data.append(data)
+
+    def write(self, file_path: str):
+        path = Path(file_path).resolve()
+        if not path.parent.is_dir():
+            raise Exception(f'Directory "{path.parent}" does not exist')
+        csv_dict_write(str(path), self.data)
